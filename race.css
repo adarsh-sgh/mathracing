@@ -1,0 +1,5 @@
+div.progressBar{
+    border-bottom-style: dashed;
+    box-sizing: border-box;
+    width:80vw ;
+}

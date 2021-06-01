@@ -4,6 +4,7 @@
 <head>
     <link rel="icon" href="icon/math.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="math.css">
+    <link rel="stylesheet" type="text/css" href="race.css">
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:image" content="icon/ogimage.png">
@@ -24,6 +25,24 @@
         <p id="correct"></p>
         <p id="incorrect"></p>
     </section>
+
+    <table cellspacing="0" cellpadding="0" class="scoreboard">
+        <tbody>
+            <tr>
+                <td align="left" style="vertical-align: top;">
+                    <table cellspacing="0" cellpadding="0" class="row">
+                        <tbody id="tbody">
+                           <!-- HEre js will insert car lanes and cars -->
+                        </tbody>
+                    </table>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+<script src="race.js"></script>
+
+
     <hr style="height:4px;border-width:0;color:gray;background-color:gray">
     <form name="settings" id="settings">
         <h3>Settings</h3>
