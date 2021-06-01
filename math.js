@@ -8,6 +8,8 @@ socket.on('scoreUpdateToClient', (id, scr) => {
    console.log(id, scr);
    moveCar(id,scr*10)
 })
+// temporary hack to make all users at same level 
+hide('settings')
 addPlayer('self','you')
 var from1
 var to1
