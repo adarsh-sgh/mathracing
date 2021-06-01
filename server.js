@@ -26,7 +26,7 @@ io.on('connection', socket => {
         usersInRoom(roomAcceptingEntry).then(numberOfUsers => {
             console.log("users in this room: ", numberOfUsers)
             if (numberOfUsers < playerLimit) {
-                socket.join(roomAcceptingEntry);
+listUsersInRoom(roomAcceptingEntry).then(idSet=>socket.emit('existingUsers',[...idSet.keys()])).then(socket.join(roomAcceptingEntry))
             } else {
                 socket.join(socket.id);
                 roomAcceptingEntry = socket.id;
@@ -49,4 +49,9 @@ function roomOf(socket) {
 async function usersInRoom(room) {
     let setOfIdsInRoom = await io.in(room).allSockets();
     return setOfIdsInRoom.size;
+}
+
+async function listUsersInRoom(room) {
+    let setOfIdsInRoom = await io.in(room).allSockets();
+    return setOfIdsInRoom;
 }

@@ -8,6 +8,7 @@ socket.on('scoreUpdateToClient', (id, scr) => {
    console.log(id, scr);
    moveCar(id,scr*10)
 })
+socket.on('existingUsers',d=>d.forEach(id=>addPlayer(id,'guest')))
 // temporary hack to make all users at same level 
 hide('settings')
 addPlayer('self','you')
@@ -283,7 +284,9 @@ function addPlayer(id , name) {
            <div class="avatar avatar-self">
                <div class="nameContainer">
                    <div class="lblName" style="white-space: nowrap;">${name}</div><span
-                       class="lblUsername">(you)</span>
+                       class="lblUsername">
+                       <!-- add username here -->
+                       </span>
                </div><img
                    src="https://play.typeracer.com/com.typeracer.redesign.Redesign/clear.cache.gif"
                    style="width:58px;height:24px;background:url(https://play.typeracer.com/com.typeracer.redesign.Redesign/335AE846C4E0C3647FC3331F512A1E25.cache.png) no-repeat -638px 0px;"
