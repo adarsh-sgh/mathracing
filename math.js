@@ -278,9 +278,9 @@ function toggleLevel() {
 
 
 function addPlayer(id , name) {
-   let carHtml=`<tr>
+   let carHtml=`<tr id="${id}">
    <td align="left" width="80%" style="vertical-align: bottom;">
-       <div class="progressBar" style="padding-left: 0%;" id="${id}">
+       <div class="progressBar" style="padding-left: 0%;">
            <div class="avatar avatar-self">
                <div class="nameContainer">
                    <div class="lblName" style="white-space: nowrap;">${name}</div><span
@@ -296,8 +296,11 @@ function addPlayer(id , name) {
    </td>
    <td align="left" width="20%" style="vertical-align: top;">
        <div class="rankPanel">
-           <div class="rank" style="white-space: normal;">2nd Place.</div>
-           <div class="rankPanelWpm rankPanelWpm-self" style="white-space: normal;">35 wpm
+           <div class="rank" style="white-space: normal;">
+         <!--rank-->  
+           </div>
+           <div class="rankPanelScore rankPanelWpm-self" style="white-space: normal;">
+           <!--score-->
            </div>
        </div>
    </td>
@@ -307,5 +310,5 @@ document.getElementById('tbody').innerHTML+=carHtml
 }
 function moveCar(id,positionPercentage){
    //multiplying positionPercentage with .9 is a hack in below line so that car does'nt goes beyond road
-   document.getElementById(id).style.paddingLeft=String(positionPercentage*.9)+'%';
+   document.querySelector(`#${id} .progressBar`).style.paddingLeft=String(positionPercentage*.9)+'%';
 }
