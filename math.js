@@ -6,6 +6,8 @@ addPlayer(id,'guest')
 })
 socket.on('scoreUpdateToClient', (id, scr) => {
    console.log(id, scr);
+   if(scr==10) rankUpdate(id,++usersCompletedRace);
+   scoreUpdate(id,scr)
    moveCar(id,scr*10)
 })
 socket.on('existingUsers',d=>d.forEach(id=>addPlayer(id,'guest')))
@@ -25,6 +27,7 @@ let num2;
 let ans;
 let userAns;
 let intervalId;
+let usersCompletedRace=0;
 formRead();
 document.getElementById("userAns").focus()
 
@@ -121,7 +124,9 @@ function check() {
    let score=correct;
    console.log(score)
    socket.emit('scoreUpdate',score);
-   moveCar('self',score*10)
+   scoreUpdate('self', score);
+   if(score==10) rankUpdate('self',++usersCompletedRace)
+   moveCar('self', score * 10)
 }
 
 function showQues() {
@@ -312,3 +317,11 @@ function moveCar(id,positionPercentage){
    //multiplying positionPercentage with .9 is a hack in below line so that car does'nt goes beyond road
    document.querySelector(`#${id} .progressBar`).style.paddingLeft=String(positionPercentage*.9)+'%';
 }
+function rankUpdate(id,rank) {
+   document.querySelector(`#${id} .rank`).innerHTML='Rank: '+rank;
+}
+
+function scoreUpdate(id,score) {
+   document.querySelector(`#${id} .rankPanelScore`).innerHTML=`${score} questions done`;
+}
+
