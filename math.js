@@ -4,6 +4,9 @@ const socket=io();
 socket.on("userJoined",(id)=>{console.log("user joined same room with id :"+id);
 addPlayer(id,'guest')
 })
+socket.on('userName',(id,userName)=>{
+   document.querySelector(`#${id} .lblName`).innerHTML=userName;
+})
 socket.on('scoreUpdateToClient', (id, scr) => {
    console.log(id, scr);
    if(scr==10) rankUpdate(id,++usersCompletedRace);
@@ -322,3 +325,9 @@ function scoreUpdate(id,score) {
    document.querySelector(`#${id} .rankPanelScore`).innerHTML=`${score} questions done`;
 }
 
+function sendName() {
+   let name=document.getElementById('name').value;
+   socket.emit('userName',name);
+   hide('name');
+   document.getElementById("userAns").focus()
+}

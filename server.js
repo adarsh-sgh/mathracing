@@ -13,7 +13,11 @@ app.use(express.static(__dirname));
 
 io.on('connection', socket => {
     console.log('a user connected with id = ' + socket.id)
-
+    socket.on("userName", userName => socket.broadcast
+        .to(roomOf(socket))
+        .emit(
+            'userName', socket.id, userName
+        ))
     socket.on("scoreUpdate", score => socket.broadcast
         .to(roomOf(socket))
         .emit(
