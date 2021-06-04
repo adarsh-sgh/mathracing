@@ -17,7 +17,7 @@ io.on('connection', socket => {
     socket.on("scoreUpdate", score => socket.broadcast
         .to(roomOf(socket))
         .emit(
-            'scoreUpdateToClient', socket.id,score
+            'scoreUpdateToClient', socket.id, score
         ))
 
     addToRandomRoom()
@@ -26,14 +26,14 @@ io.on('connection', socket => {
         usersInRoom(roomAcceptingEntry).then(numberOfUsers => {
             console.log("users in this room: ", numberOfUsers)
             if (numberOfUsers < playerLimit) {
-listUsersInRoom(roomAcceptingEntry).then(idSet=>socket.emit('existingUsers',[...idSet.keys()])).then(socket.join(roomAcceptingEntry))
+                listUsersInRoom(roomAcceptingEntry).then(idSet => socket.emit('existingUsers', [...idSet.keys()])).then(socket.join(roomAcceptingEntry))
             } else {
                 socket.join(socket.id);
                 roomAcceptingEntry = socket.id;
             }
             socket.broadcast.to(roomOf(socket)).emit('userJoined', socket.id)
         }).catch(e => console.log(e))
-        
+
     }
 })
 
