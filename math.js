@@ -240,17 +240,17 @@ function toggleLevel() {
 
 //code related to service workers(for making app pwa) is commented out because it was not working
 
-// if ('serviceWorker' in navigator) {
-//    window.addEventListener('load', function () {
-//       navigator.serviceWorker.register('/Math-Practice/sw.js').then(function (registration) {
-//          // Registration was successful
-//          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-//       }, function (err) {
-//          // registration failed :(
-//          console.log('ServiceWorker registration failed: ', err);
-//       });
-//    });
-// }
+if ('serviceWorker' in navigator) {
+   window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').then(function (registration) {
+         // Registration was successful
+         console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, function (err) {
+         // registration failed :(
+         console.log('ServiceWorker registration failed: ', err);
+      });
+   });
+}
 
 // let deferredPrompt;
 // const addBtn = document.querySelector('.add-button');
