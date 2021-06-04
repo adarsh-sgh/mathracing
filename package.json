@@ -1,5 +1,5 @@
 {
-  "name": "math-practice",
+  "name": "mathracing",
   "version": "0.0.1",
   "description": "webapp to compete in mathematics",
   "main": "math.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lkiThakur/Math-Practice.git"
+    "url": "git+https://github.com/lkiThakur/mathracing.git"
   },
   "keywords": [
     "math",
@@ -20,9 +20,9 @@
   "author": "Adarsh Singh",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lkiThakur/Math-Practice/issues"
+    "url": "https://github.com/lkiThakur/mathracing/issues"
   },
-  "homepage": "https://github.com/lkiThakur/Math-Practice#readme",
+  "homepage": "https://github.com/lkiThakur/mathracing#readme",
   "dependencies": {
     "express": "^4.17.1",
     "nodemon": "^2.0.7",

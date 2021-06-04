@@ -3,7 +3,7 @@
     "background_color": " #ff7a0e",
     "display": "minimal-ui",
     "scope": "/",
-    "start_url": "/Math-Practice/index.html",
+    "start_url": "/index.html",
     "name": "Math Practice",
     "short_name": "math",
     "description": "Do multiplication addition subtraction or division",
