@@ -1,22 +1,23 @@
 "use strict"
 
-const socket=io();
-socket.on("userJoined",(id)=>{console.log("user joined same room with id :"+id);
-addPlayer(id,'guest')
+const socket = io();
+socket.on("userJoined", (id) => {
+   console.log("user joined same room with id :" + id);
+   addPlayer(id, 'guest')
 })
-socket.on('userName',(id,userName)=>{
-   document.querySelector(`#${id} .lblName`).innerHTML=userName;
+socket.on('userName', (id, userName) => {
+   document.querySelector(`#${id} .lblName`).innerHTML = userName;
 })
 socket.on('scoreUpdateToClient', (id, scr) => {
    console.log(id, scr);
-   if(scr==10) rankUpdate(id,++usersCompletedRace);
-   scoreUpdate(id,scr)
-   moveCar(id,scr*10)
+   if (scr == 10) rankUpdate(id, ++usersCompletedRace);
+   scoreUpdate(id, scr)
+   moveCar(id, scr * 10)
 })
-socket.on('existingUsers',d=>d.forEach(id=>addPlayer(id,'guest')))
+socket.on('existingUsers', d => d.forEach(id => addPlayer(id, 'guest')))
 // temporary hack to make all users at same level 
 hide('settings')
-addPlayer('self','you')
+addPlayer('self', 'you')
 var from1
 var to1
 var from2
@@ -30,7 +31,7 @@ let num2;
 let ans;
 let userAns;
 let intervalId;
-let usersCompletedRace=0;
+let usersCompletedRace = 0;
 formRead();
 document.getElementById("userAns").focus()
 
@@ -92,19 +93,19 @@ function autoEnter() {
    }
 } //auto enters the answer if it's corrrect
 
-let timeElapsed=0
+let timeElapsed = 0
 function check() {
-   if(correct==0&&incorrect==0){
-      
-      let interval=1;//in seconds
+   if (correct == 0 && incorrect == 0) {
+
+      let interval = 1;//in seconds
       timerStart();
       function timerStart() {
-         intervalId= setInterval(() => {
-            timeElapsed+=interval;
-            let min=Math.floor(timeElapsed/60);
-            let sec=timeElapsed%60;
-            document.getElementById("timer").innerHTML=`${min} : ${sec}`
-         }, 1000*interval);
+         intervalId = setInterval(() => {
+            timeElapsed += interval;
+            let min = Math.floor(timeElapsed / 60);
+            let sec = timeElapsed % 60;
+            document.getElementById("timer").innerHTML = `${min} : ${sec}`
+         }, 1000 * interval);
       }
    }
    userAns = +document.getElementById("userAns").value
@@ -124,11 +125,11 @@ function check() {
       attentionGet("notice", 4);
    }
    // let score=timeElapsed?(correct-incorrect/4)/timeElapsed:0;
-   let score=correct;
+   let score = correct;
    console.log(score)
-   socket.emit('scoreUpdate',score);
+   socket.emit('scoreUpdate', score);
    scoreUpdate('self', score);
-   if(score==10) rankUpdate('self',++usersCompletedRace)
+   if (score == 10) rankUpdate('self', ++usersCompletedRace)
    moveCar('self', score * 10)
 }
 
@@ -282,8 +283,8 @@ if ('serviceWorker' in navigator) {
 
 
 
-function addPlayer(id , name) {
-   let carHtml=`<tr id="${id}">
+function addPlayer(id, name) {
+   let carHtml = `<tr id="${id}">
    <td align="left" width="80%" style="vertical-align: bottom;">
        <div class="progressBar" style="padding-left: 0%;">
            <div class="avatar avatar-self">
@@ -310,24 +311,24 @@ function addPlayer(id , name) {
        </div>
    </td>
 </tr>`
-   
-document.getElementById('tbody').innerHTML+=carHtml
+
+   document.getElementById('tbody').innerHTML += carHtml
 }
-function moveCar(id,positionPercentage){
+function moveCar(id, positionPercentage) {
    //multiplying positionPercentage with .9 is a hack in below line so that car does'nt goes beyond road
-   document.querySelector(`#${id} .progressBar`).style.paddingLeft=String(positionPercentage*.9)+'%';
+   document.querySelector(`#${id} .progressBar`).style.paddingLeft = String(positionPercentage * .9) + '%';
 }
-function rankUpdate(id,rank) {
-   document.querySelector(`#${id} .rank`).innerHTML='Rank: '+rank;
+function rankUpdate(id, rank) {
+   document.querySelector(`#${id} .rank`).innerHTML = 'Rank: ' + rank;
 }
 
-function scoreUpdate(id,score) {
-   document.querySelector(`#${id} .rankPanelScore`).innerHTML=`${score} questions done`;
+function scoreUpdate(id, score) {
+   document.querySelector(`#${id} .rankPanelScore`).innerHTML = `${score} questions done`;
 }
 
 function sendName() {
-   let name=document.getElementById('name').value;
-   socket.emit('userName',name);
+   let name = document.getElementById('name').value;
+   socket.emit('userName', name);
    hide('name');
    document.getElementById("userAns").focus()
 }
