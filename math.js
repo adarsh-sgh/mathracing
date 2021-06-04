@@ -238,16 +238,13 @@ function toggleLevel() {
    dropdownState('levelSet', 'levelDropdownSymbol')
 }
 
-//code related to service workers(for making app pwa) is commented out because it was not working
-
+//code related to service workers(for making app pwa) copied from web!
 if ('serviceWorker' in navigator) {
    window.addEventListener('load', function () {
       navigator.serviceWorker.register('/sw.js').then(function (registration) {
-         // Registration was successful
-         console.log('ServiceWorker registration successful with scope: ', registration.scope);
+         // console.log('ServiceWorker registration successful with scope: ', registration.scope);
       }, function (err) {
-         // registration failed :(
-         console.log('ServiceWorker registration failed: ', err);
+         // console.log('ServiceWorker registration failed: ', err);
       });
    });
 }
