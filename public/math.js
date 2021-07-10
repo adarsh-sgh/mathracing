@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 const socket = io();
 socket.on('userJoined', (id) => {
   console.log(`user joined same room with id :${id}`);
@@ -6,6 +7,22 @@ socket.on('userJoined', (id) => {
 socket.on('userName', (id, userName) => {
   document.querySelector(`#${id} .lblName`).innerHTML = userName;
 });
+socket.on('youAreFirstUserInRoom', () => {
+        console.log('first user')
+        const startButton=`<button id="startGame">Start Game</button>`
+document.getElementById('main').innerHTML+=startButton;
+document.getElementById('startGame').addEventListener('click',()=>{
+  socket.emit('startGame');
+  document.getElementById('startGame').style.display='none';
+})
+});
+
+socket.on('startGame',()=>{
+  console.log('start game sig recived')
+  document.getElementById('userAns').removeAttribute('disabled');
+  document.getElementById('notice').innerHTML = 'Game Started : GO GO GO';
+    attentionGet('notice', 4);
+})
 socket.on('scoreUpdateToClient', (id, scr) => {
   console.log(id, scr);
   if (scr == 10) rankUpdate(id, ++usersCompletedRace);

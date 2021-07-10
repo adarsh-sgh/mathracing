@@ -10,5 +10,6 @@
         "sourceType": "module"
     },
     "rules": {
+        "no-inner-declarations":0
     }
 }

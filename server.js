@@ -23,20 +23,25 @@ io.on("connection", (socket) => {
       .to(roomOf(socket))
       .emit("scoreUpdateToClient", socket.id, score)
   );
-
+  socket.on("startGame", () =>
+  io.to(roomOf(socket)).emit("startGame")
+);
   addToRandomRoom();
   async function addToRandomRoom() {
     usersInRoom(roomAcceptingEntry, io)
       .then((numberOfUsers) => {
         console.log("users in this room: ", numberOfUsers);
-        if (numberOfUsers < playerLimit) {
+        if (numberOfUsers < playerLimit&&roomAcceptingEntry) {
           listUsersInRoom(roomAcceptingEntry, io)
             .then((idSet) => socket.emit("existingUsers", [...idSet.keys()]))
             .then(socket.join(roomAcceptingEntry));
         } else {
+          console.log('firstuser')
+          socket.emit('youAreFirstUserInRoom')
           socket.join(socket.id);
           roomAcceptingEntry = socket.id;
         }
+        console.log(roomOf(socket),'room of socket')
         socket.broadcast.to(roomOf(socket)).emit("userJoined", socket.id);
       })
       .catch((e) => console.log(e));
