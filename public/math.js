@@ -345,7 +345,7 @@ function sendName() {
   document.getElementById('userAns').focus();
 }
 
-document.getElementById('userAns').addEventListener('input',autoEnter)
+// document.getElementById('userAns').addEventListener('input',autoEnter)
 document.getElementById('level').addEventListener('click',toggleLevel)
 document.getElementById('applySettings').addEventListener('click',formRead)
 document.getElementById('applySettings').addEventListener('click',()=>alert('form values updated'))

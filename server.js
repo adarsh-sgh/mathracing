@@ -14,6 +14,7 @@ const playerLimit = 5;
 app.use(express.static(path.join(__dirname, "public")));
 
 io.on("connection", (socket) => {
+  console.log('room of socket is ',roomOf(socket))
   console.log(`a user connected with id = ${socket.id}`);
   socket.on("userName", (userName) =>
     socket.broadcast.to(roomOf(socket)).emit("userName", socket.id, userName)

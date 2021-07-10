@@ -35,7 +35,7 @@
         <div id="questiontimer">
             <p id="question"></p> <span id="timer">00:00</span>
         </div>
-        <input type="number" id="userAns" onclick="writeOn('welcome','')"  placeholder="Game not started yet" disabled>
+        <input type="number" id="userAns" onclick="writeOn('welcome','')" oninput="autoEnter()" placeholder="Game not started yet" disabled>
         <br>
         <p id="correct"></p>
         <p id="incorrect"></p>
