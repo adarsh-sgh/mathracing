@@ -35,7 +35,7 @@
         <div id="questiontimer">
             <p id="question"></p> <span id="timer">00:00</span>
         </div>
-        <input type="number" id="userAns" onclick="writeOn('welcome','')" oninput="autoEnter()">
+        <input type="number" id="userAns" onclick="writeOn('welcome','')" >
         <br>
         <p id="correct"></p>
         <p id="incorrect"></p>
@@ -71,7 +71,7 @@
         <label for="div"> Division:</label>
         <input type="checkbox" name="Division" id="div"> <br>
         <hr>
-        <button type="button" id="level" onclick="toggleLevel()">Customise Level of Question <span
+        <button type="button" id="level">Customise Level of Question <span
                 id="levelDropdownSymbol">▼ </span></button>
         <div id="levelSet" style="display: none;">
             <p>Range of 1st number</p>
@@ -89,7 +89,7 @@
                 life.<sup>[Beta]</sup></label>
             <input type="checkbox" name="real" id="real">
 
-    </form><button type="button" onclick="formRead();alert('Form Values Updated')">APPLY</button>
+    </form><button type="button" id="applySettings" >APPLY</button>
     <hr>
     </div>
     <script src="/socket.io/socket.io.js"></script>

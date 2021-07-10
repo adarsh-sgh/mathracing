@@ -5,12 +5,10 @@ const path = require("path");
 const roomOf = require("./server_modules/socket/roomOf");
 const listUsersInRoom = require("./server_modules/socket/listUsersInRoom");
 const usersInRoom = require("./server_modules/socket/usersInRoom");
-console.log(usersInRoom.usersInRoom);
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-// const rooms={}
 let roomAcceptingEntry = false;
 const playerLimit = 5;
 app.use(express.static(path.join(__dirname, "public")));
