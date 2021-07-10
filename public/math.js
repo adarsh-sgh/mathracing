@@ -14,6 +14,8 @@ socket.on('scoreUpdateToClient', (id, scr) => {
 });
 socket.on('existingUsers', (d) => d.forEach((id) => addPlayer(id, 'guest')));
 // temporary hack to make all users at same level
+// todo: allow skippig questions,setting level of question;
+
 hide('settings');
 addPlayer('self', 'you');
 let from1;
