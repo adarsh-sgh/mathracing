@@ -1,29 +1,27 @@
-"use strict"
-
 const socket = io();
-socket.on("userJoined", (id) => {
-   console.log("user joined same room with id :" + id);
-   addPlayer(id, 'guest')
-})
+socket.on('userJoined', (id) => {
+  console.log(`user joined same room with id :${id}`);
+  addPlayer(id, 'guest');
+});
 socket.on('userName', (id, userName) => {
-   document.querySelector(`#${id} .lblName`).innerHTML = userName;
-})
+  document.querySelector(`#${id} .lblName`).innerHTML = userName;
+});
 socket.on('scoreUpdateToClient', (id, scr) => {
-   console.log(id, scr);
-   if (scr == 10) rankUpdate(id, ++usersCompletedRace);
-   scoreUpdate(id, scr)
-   moveCar(id, scr * 10)
-})
-socket.on('existingUsers', d => d.forEach(id => addPlayer(id, 'guest')))
-// temporary hack to make all users at same level 
-hide('settings')
-addPlayer('self', 'you')
-var from1
-var to1
-var from2
-var to2
-let questionLeft
-let operator
+  console.log(id, scr);
+  if (scr == 10) rankUpdate(id, ++usersCompletedRace);
+  scoreUpdate(id, scr);
+  moveCar(id, scr * 10);
+});
+socket.on('existingUsers', (d) => d.forEach((id) => addPlayer(id, 'guest')));
+// temporary hack to make all users at same level
+hide('settings');
+addPlayer('self', 'you');
+let from1;
+let to1;
+let from2;
+let to2;
+let questionLeft;
+let operator;
 let correct = 0;
 let incorrect = 0;
 let num1;
@@ -33,224 +31,221 @@ let userAns;
 let intervalId;
 let usersCompletedRace = 0;
 formRead();
-document.getElementById("userAns").focus()
+document.getElementById('userAns').focus();
 
 function formRead() {
-   from1 = +document.forms['settings']['from1'].value;
-   to1 = +document.forms["settings"]["to1"].value;
-   from2 = +document.forms["settings"]["from2"].value;
-   to2 = +document.forms["settings"]["to2"].value;
-   questionLeft = +document.forms["settings"]["NumberOfQuestions"].value;
-   operator = [];
-   operatorsSelected();
-   correct = 0;
-   incorrect = 0;
-   document.getElementById("correct").innerHTML = "correct : " + correct;
-   document.getElementById("incorrect").innerHTML = "incorrect : " + incorrect
+  from1 = +document.forms.settings.from1.value;
+  to1 = +document.forms.settings.to1.value;
+  from2 = +document.forms.settings.from2.value;
+  to2 = +document.forms.settings.to2.value;
+  questionLeft = +document.forms.settings.NumberOfQuestions.value;
+  operator = [];
+  operatorsSelected();
+  correct = 0;
+  incorrect = 0;
+  document.getElementById('correct').innerHTML = `correct : ${correct}`;
+  document.getElementById('incorrect').innerHTML = `incorrect : ${incorrect}`;
 
-   showQues()
+  showQues();
 }
 
 function quesmul() {
-   num1 = intRange(from1, to1);
-   num2 = intRange(from2, to2);
-   ans = (num1) * (num2);
-   let ques = `${num1}&times${num2}`
-   document.getElementById("question").innerHTML = ques;
-   document.getElementById("userAns").value = ""
+  num1 = intRange(from1, to1);
+  num2 = intRange(from2, to2);
+  ans = (num1) * (num2);
+  const ques = `${num1}&times${num2}`;
+  document.getElementById('question').innerHTML = ques;
+  document.getElementById('userAns').value = '';
 }
 
 function quesadd() {
-   num1 = intRange(from1, to1);
-   num2 = intRange(from2, to2);
-   ans = (num1) + (num2);
-   let ques = `${num1}+${num2}`
-   document.getElementById("question").innerHTML = ques;
-   document.getElementById("userAns").value = ""
+  num1 = intRange(from1, to1);
+  num2 = intRange(from2, to2);
+  ans = (num1) + (num2);
+  const ques = `${num1}+${num2}`;
+  document.getElementById('question').innerHTML = ques;
+  document.getElementById('userAns').value = '';
 }
 
 function quessub() {
-   num1 = intRange(from1, to1);
-   num2 = intRange(from2, to2);
-   ans = (num1) - (num2);
-   let ques = `${num1}-${num2}`
-   document.getElementById("question").innerHTML = ques;
-   document.getElementById("userAns").value = "";
+  num1 = intRange(from1, to1);
+  num2 = intRange(from2, to2);
+  ans = (num1) - (num2);
+  const ques = `${num1}-${num2}`;
+  document.getElementById('question').innerHTML = ques;
+  document.getElementById('userAns').value = '';
 }
 
 function quesdiv() {
-   num1 = intRange(from1, to1);
-   num2 = intRange(from2, to2);
-   ans = (num1) / (num2);
-   let ques = `${num1}/${num2}`
-   document.getElementById("question").innerHTML = ques;
-   document.getElementById("userAns").value = ""
+  num1 = intRange(from1, to1);
+  num2 = intRange(from2, to2);
+  ans = (num1) / (num2);
+  const ques = `${num1}/${num2}`;
+  document.getElementById('question').innerHTML = ques;
+  document.getElementById('userAns').value = '';
 }
 
 function autoEnter() {
-   if (Math.abs(+document.getElementById("userAns").value - ans) < .01) {
-      check()
-   }
-} //auto enters the answer if it's corrrect
+  if (Math.abs(+document.getElementById('userAns').value - ans) < 0.01) {
+    check();
+  }
+} // auto enters the answer if it's corrrect
 
-let timeElapsed = 0
+let timeElapsed = 0;
 function check() {
-   if (correct == 0 && incorrect == 0) {
-
-      let interval = 1;//in seconds
-      timerStart();
-      function timerStart() {
-         intervalId = setInterval(() => {
-            timeElapsed += interval;
-            let min = Math.floor(timeElapsed / 60);
-            let sec = timeElapsed % 60;
-            document.getElementById("timer").innerHTML = `${min} : ${sec}`
-         }, 1000 * interval);
-      }
-   }
-   userAns = +document.getElementById("userAns").value
-   if (Math.abs(ans - userAns) < .01) {
-      correct++;
-      document.getElementById("correct").innerHTML = "correct : " + correct;
-   } else {
-      incorrect++;
-      document.getElementById("incorrect").innerHTML = "incorrect : " + incorrect
-   };
-   if (--questionLeft > 0) {
-      document.getElementById("notice").innerHTML = `${questionLeft} Question Remaining`
-      showQues()
-   } else {
-      clearInterval(intervalId);
-      document.getElementById("notice").innerHTML = "Well Done ! Refresh page or Modify settings below to continue practicing.";
-      attentionGet("notice", 4);
-   }
-   // let score=timeElapsed?(correct-incorrect/4)/timeElapsed:0;
-   let score = correct;
-   console.log(score)
-   socket.emit('scoreUpdate', score);
-   scoreUpdate('self', score);
-   if (score == 10) rankUpdate('self', ++usersCompletedRace)
-   moveCar('self', score * 10)
+  if (correct == 0 && incorrect == 0) {
+    const interval = 1;// in seconds
+    timerStart();
+    function timerStart() {
+      intervalId = setInterval(() => {
+        timeElapsed += interval;
+        const min = Math.floor(timeElapsed / 60);
+        const sec = timeElapsed % 60;
+        document.getElementById('timer').innerHTML = `${min} : ${sec}`;
+      }, 1000 * interval);
+    }
+  }
+  userAns = +document.getElementById('userAns').value;
+  if (Math.abs(ans - userAns) < 0.01) {
+    correct++;
+    document.getElementById('correct').innerHTML = `correct : ${correct}`;
+  } else {
+    incorrect++;
+    document.getElementById('incorrect').innerHTML = `incorrect : ${incorrect}`;
+  }
+  if (--questionLeft > 0) {
+    document.getElementById('notice').innerHTML = `${questionLeft} Question Remaining`;
+    showQues();
+  } else {
+    clearInterval(intervalId);
+    document.getElementById('notice').innerHTML = 'Well Done ! Refresh page or Modify settings below to continue practicing.';
+    attentionGet('notice', 4);
+  }
+  // let score=timeElapsed?(correct-incorrect/4)/timeElapsed:0;
+  const score = correct;
+  console.log(score);
+  socket.emit('scoreUpdate', score);
+  scoreUpdate('self', score);
+  if (score == 10) rankUpdate('self', ++usersCompletedRace);
+  moveCar('self', score * 10);
 }
 
 function showQues() {
-   if (document.getElementById("real").checked) {
-      quesReal()
-   } else {
-      randomElement(operator)()
-   };
+  if (document.getElementById('real').checked) {
+    quesReal();
+  } else {
+    randomElement(operator)();
+  }
 }
 
 function operatorsSelected() {
-   if (document.getElementById("add").checked) {
-      operator.push(quesadd)
-   };
-   if (document.getElementById("sub").checked) {
-      operator.push(quessub)
-   };
-   if (document.getElementById("div").checked) {
-      operator.push(quesdiv)
-   };
-   if (document.getElementById("mul").checked || operator.length == 0) { //if no operator is selected push mul.
-      operator.push(quesmul)
-   };
+  if (document.getElementById('add').checked) {
+    operator.push(quesadd);
+  }
+  if (document.getElementById('sub').checked) {
+    operator.push(quessub);
+  }
+  if (document.getElementById('div').checked) {
+    operator.push(quesdiv);
+  }
+  if (document.getElementById('mul').checked || operator.length == 0) { // if no operator is selected push mul.
+    operator.push(quesmul);
+  }
 }
 
-function attentionGet(id, strength = 1, color = "Yellow") {
-
-   document.getElementById(id).style.backgroundColor = color;
-   setTimeout(() => {
-      document.getElementById(id).style.backgroundColor = ""
-
-   }, 500 * strength);
+function attentionGet(id, strength = 1, color = 'Yellow') {
+  document.getElementById(id).style.backgroundColor = color;
+  setTimeout(() => {
+    document.getElementById(id).style.backgroundColor = '';
+  }, 500 * strength);
 }
 
 function intRange(a, b) {
-   return Math.floor(Math.random() * (b - a)) + a;
-} //random int from a to b-1
+  return Math.floor(Math.random() * (b - a)) + a;
+} // random int from a to b-1
 
 function randomElement(inputArray) {
-   let randomIndex = intRange(0, inputArray.length)
-   return inputArray[randomIndex]
+  const randomIndex = intRange(0, inputArray.length);
+  return inputArray[randomIndex];
 }
 
 function quesReal() {
-   if (ans < 500) {
-      mulreal()
-   } else if (ans < 1000) {
-      addreal()
-   } else {
-      subreal()
-   };
+  if (ans < 500) {
+    mulreal();
+  } else if (ans < 1000) {
+    addreal();
+  } else {
+    subreal();
+  }
 
-   function mulreal() {
-      num1 = userAns || intRange(from1, to1);
-      num2 = intRange(0, 20);
-      ans = (num1) * (num2);
-      let ques = `${num1}&times${num2}`
-      document.getElementById("question").innerHTML = ques;
-      document.getElementById("userAns").value = ""
-   };
+  function mulreal() {
+    num1 = userAns || intRange(from1, to1);
+    num2 = intRange(0, 20);
+    ans = (num1) * (num2);
+    const ques = `${num1}&times${num2}`;
+    document.getElementById('question').innerHTML = ques;
+    document.getElementById('userAns').value = '';
+  }
 
-   function addreal() {
-      num1 = userAns || intRange(0, 1000);
-      num2 = intRange(from2, to2);
-      ans = (num1) + (num2);
-      let ques = `${num1}+${num2}`
-      document.getElementById("question").innerHTML = ques;
-      document.getElementById("userAns").value = ""
-   }
+  function addreal() {
+    num1 = userAns || intRange(0, 1000);
+    num2 = intRange(from2, to2);
+    ans = (num1) + (num2);
+    const ques = `${num1}+${num2}`;
+    document.getElementById('question').innerHTML = ques;
+    document.getElementById('userAns').value = '';
+  }
 
-   function subreal() {
-      num1 = userAns || intRange(from1, to1);
-      num2 = intRange(0, 1000);
-      ans = (num1) - (num2);
-      let ques = `${num1}-${num2}`
-      document.getElementById("question").innerHTML = ques;
-      document.getElementById("userAns").value = "";
-   }
+  function subreal() {
+    num1 = userAns || intRange(from1, to1);
+    num2 = intRange(0, 1000);
+    ans = (num1) - (num2);
+    const ques = `${num1}-${num2}`;
+    document.getElementById('question').innerHTML = ques;
+    document.getElementById('userAns').value = '';
+  }
 }
 
 function dropdownState(idToggled, idButton) {
-   if (document.getElementById(idToggled).style.display == "none") {
-      writeOn(idButton, '▼')
-   } else {
-      writeOn(idButton, '▲')
-   }
+  if (document.getElementById(idToggled).style.display == 'none') {
+    writeOn(idButton, '▼');
+  } else {
+    writeOn(idButton, '▲');
+  }
 }
 
 function hide(id) {
-   document.getElementById(id).style.display = "none"
-};
+  document.getElementById(id).style.display = 'none';
+}
 
 function show(id) {
-   document.getElementById(id).style.display = "block"
-};
+  document.getElementById(id).style.display = 'block';
+}
 
 function toggleVisibility(id) {
-   if (document.getElementById(id).style.display == "none") {
-      show(id)
-   } else hide(id)
+  if (document.getElementById(id).style.display == 'none') {
+    show(id);
+  } else hide(id);
 }
 
 function writeOn(id, message) {
-   document.getElementById(id).innerHTML = message
+  document.getElementById(id).innerHTML = message;
 }
 
 function toggleLevel() {
-   toggleVisibility('levelSet');
-   dropdownState('levelSet', 'levelDropdownSymbol')
+  toggleVisibility('levelSet');
+  dropdownState('levelSet', 'levelDropdownSymbol');
 }
 
-//code related to service workers(for making app pwa) copied from web!
+// code related to service workers(for making app pwa) copied from web!
 if ('serviceWorker' in navigator) {
-   window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/sw.js').then(function (registration) {
-         // console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      }, function (err) {
-         console.log('ServiceWorker registration failed: ', err);
-      });
-   });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then((registration) => {
+      // console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, (err) => {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
 }
 
 // let deferredPrompt;
@@ -281,10 +276,8 @@ if ('serviceWorker' in navigator) {
 //    });
 // });
 
-
-
 function addPlayer(id, name) {
-   let carHtml = `<tr id="${id}">
+  const carHtml = `<tr id="${id}">
    <td align="left" width="80%" style="vertical-align: bottom;">
        <div class="progressBar" style="padding-left: 0%;">
            <div class="avatar avatar-self">
@@ -310,25 +303,25 @@ function addPlayer(id, name) {
            </div>
        </div>
    </td>
-</tr>`
+</tr>`;
 
-   document.getElementById('tbody').innerHTML += carHtml
+  document.getElementById('tbody').innerHTML += carHtml;
 }
 function moveCar(id, positionPercentage) {
-   //multiplying positionPercentage with .9 is a hack in below line so that car does'nt goes beyond road
-   document.querySelector(`#${id} .progressBar`).style.paddingLeft = String(positionPercentage * .9) + '%';
+  // multiplying positionPercentage with .9 is a hack in below line so that car does'nt goes beyond road
+  document.querySelector(`#${id} .progressBar`).style.paddingLeft = `${String(positionPercentage * 0.9)}%`;
 }
 function rankUpdate(id, rank) {
-   document.querySelector(`#${id} .rank`).innerHTML = 'Rank: ' + rank;
+  document.querySelector(`#${id} .rank`).innerHTML = `Rank: ${rank}`;
 }
 
 function scoreUpdate(id, score) {
-   document.querySelector(`#${id} .rankPanelScore`).innerHTML = `${score} questions done`;
+  document.querySelector(`#${id} .rankPanelScore`).innerHTML = `${score} questions done`;
 }
 
 function sendName() {
-   let name = document.getElementById('name').value;
-   socket.emit('userName', name);
-   hide('name');
-   document.getElementById("userAns").focus()
+  const name = document.getElementById('name').value;
+  socket.emit('userName', name);
+  hide('name');
+  document.getElementById('userAns').focus();
 }

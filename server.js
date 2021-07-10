@@ -1,7 +1,6 @@
-
-const http = require('http');
-const express = require('express');
-const socketio = require('socket.io')
+const http = require("http");
+const express = require("express");
+const socketio = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
@@ -11,51 +10,54 @@ let roomAcceptingEntry = false;
 const playerLimit = 5;
 app.use(express.static(__dirname));
 
-io.on('connection', socket => {
-    console.log('a user connected with id = ' + socket.id)
-    socket.on("userName", userName => socket.broadcast
-        .to(roomOf(socket))
-        .emit(
-            'userName', socket.id, userName
-        ))
-    socket.on("scoreUpdate", score => socket.broadcast
-        .to(roomOf(socket))
-        .emit(
-            'scoreUpdateToClient', socket.id, score
-        ))
+io.on("connection", (socket) => {
+  console.log(`a user connected with id = ${socket.id}`);
+  socket.on("userName", (userName) =>
+    socket.broadcast.to(roomOf(socket)).emit("userName", socket.id, userName)
+  );
+  socket.on("scoreUpdate", (score) =>
+    socket.broadcast
+      .to(roomOf(socket))
+      .emit("scoreUpdateToClient", socket.id, score)
+  );
 
-    addToRandomRoom()
-    async function addToRandomRoom() {
+  addToRandomRoom();
+  async function addToRandomRoom() {
+    usersInRoom(roomAcceptingEntry)
+      .then((numberOfUsers) => {
+        console.log("users in this room: ", numberOfUsers);
+        if (numberOfUsers < playerLimit) {
+          listUsersInRoom(roomAcceptingEntry)
+            .then((idSet) => socket.emit("existingUsers", [...idSet.keys()]))
+            .then(socket.join(roomAcceptingEntry));
+        } else {
+          socket.join(socket.id);
+          roomAcceptingEntry = socket.id;
+        }
+        socket.broadcast.to(roomOf(socket)).emit("userJoined", socket.id);
+      })
+      .catch((e) => console.log(e));
+  }
+});
 
-        usersInRoom(roomAcceptingEntry).then(numberOfUsers => {
-            console.log("users in this room: ", numberOfUsers)
-            if (numberOfUsers < playerLimit) {
-                listUsersInRoom(roomAcceptingEntry).then(idSet => socket.emit('existingUsers', [...idSet.keys()])).then(socket.join(roomAcceptingEntry))
-            } else {
-                socket.join(socket.id);
-                roomAcceptingEntry = socket.id;
-            }
-            socket.broadcast.to(roomOf(socket)).emit('userJoined', socket.id)
-        }).catch(e => console.log(e))
-
-    }
-})
-
-const PORT = process.env.PORT || 3000
-server.listen(PORT, () => { console.log(`Server running on port ${PORT}`) })
-
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 function roomOf(socket) {
-    let roomArray = Array.from(socket.rooms);
-    //we assume socket has joined 2 rooms only ;one it's default room (id) and other in which game gonna happen
-    return roomArray[0] = socket.id ? roomArray[1] : roomArray[0];
+  const roomArray = Array.from(socket.rooms);
+  // we assume socket has joined 2 rooms only ;
+  // one it's default room (id) and other in which game gonna happen
+  roomArray[0] = socket.id ? roomArray[1] : roomArray[0];
+  return roomArray[0];
 }
 async function usersInRoom(room) {
-    let setOfIdsInRoom = await io.in(room).allSockets();
-    return setOfIdsInRoom.size;
+  const setOfIdsInRoom = await io.in(room).allSockets();
+  return setOfIdsInRoom.size;
 }
 
 async function listUsersInRoom(room) {
-    let setOfIdsInRoom = await io.in(room).allSockets();
-    return setOfIdsInRoom;
+  const setOfIdsInRoom = await io.in(room).allSockets();
+  return setOfIdsInRoom;
 }
