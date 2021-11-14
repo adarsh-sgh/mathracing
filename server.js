@@ -37,10 +37,9 @@ io.on("connection", (socket) => {
             .then((idSet) => socket.emit("existingUsers", [...idSet.keys()]))
             .then(socket.join(roomAcceptingEntry));
         } else {
-          console.log('firstuser')
           socket.emit('youAreFirstUserInRoom')
-          socket.join(socket.id);
-          roomAcceptingEntry = socket.id;
+          socket.join('room_' + socket.id);
+          roomAcceptingEntry = 'room_' + socket.id;
         }
         console.log(roomOf(socket),'room of socket')
         socket.broadcast.to(roomOf(socket)).emit("userJoined", socket.id);
