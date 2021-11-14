@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lkiThakur/mathracing.git"
+    "url": "git+https://github.com/adarsh-sgh/mathracing.git"
   },
   "keywords": [
     "math",
@@ -20,9 +20,9 @@
   "author": "Adarsh Singh",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lkiThakur/mathracing/issues"
+    "url": "https://github.com/adarsh-sgh/mathracing/issues"
   },
-  "homepage": "https://github.com/lkiThakur/mathracing#readme",
+  "homepage": "https://github.com/adarsh-sgh/mathracing#readme",
   "dependencies": {
     "express": "^4.17.1",
     "nodemon": "^2.0.7",

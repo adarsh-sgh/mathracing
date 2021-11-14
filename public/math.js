@@ -13,7 +13,8 @@ socket.on('youAreFirstUserInRoom', () => {
 document.getElementById('main').innerHTML+=startButton;
 document.getElementById('startGame').addEventListener('click',()=>{
   socket.emit('startGame');
-  document.getElementById('startGame').style.display='none';
+  document.getElementById('startGame').remove();
+  document.getElementById('userAns').focus();
 })
 });
 
