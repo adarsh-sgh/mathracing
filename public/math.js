@@ -21,6 +21,8 @@ document.getElementById('startGame').addEventListener('click',()=>{
 socket.on('startGame',()=>{
   console.log('start game sig recived')
   document.getElementById('userAns').removeAttribute('disabled');
+  document.getElementById('userAns').removeAttribute('placeholder');
+  document.getElementById('userAns').focus();
   document.getElementById('notice').innerHTML = 'Game Started : GO GO GO';
     attentionGet('notice', 4);
 })
